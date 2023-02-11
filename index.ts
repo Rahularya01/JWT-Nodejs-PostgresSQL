@@ -2,6 +2,7 @@ import express, { Application } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import userRouter from "./routes/userRoutes";
+import taskRoutes from "./routes/taskRoutes";
 
 dotenv.config();
 
@@ -11,7 +12,6 @@ app.use(cors());
 app.use(express.json());
 
 app.use(userRouter);
+app.use(taskRoutes);
 
-app.listen(3001, () => {
-  console.log("Server Running on PORT 3001");
-});
+export default app;

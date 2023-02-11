@@ -25,7 +25,7 @@ export default class UserController {
 
       res.status(200).json({ token });
     } catch (err) {
-      res.status(400).json({ message: "User already Exists" });
+      res.status(400).json({ message: "This email have a existing account" });
     }
   }
 
@@ -67,6 +67,11 @@ export default class UserController {
         where: {
           id: userID,
         },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
       });
 
       if (!user) {
@@ -75,9 +80,7 @@ export default class UserController {
         });
       }
 
-      const { id, name, email } = user;
-      res.status(200).json({ id, name, email });
-      
+      res.status(200).json(user);
     } catch (error) {
       res.status(401).json({
         message: "Something Went Wrong",
