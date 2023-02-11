@@ -1,7 +1,8 @@
-import jwt, { Secret } from "jsonwebtoken";
+import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import prisma from "../prisma/prisma";
+import IUserRequest from "../lib/userType";
 
 export default class UserController {
   async register(req: Request, res: Response) {
@@ -58,7 +59,29 @@ export default class UserController {
     }
   }
 
-  async profile(req: Request, res: Response) {
-    res.send("Hello");
+  async profile(req: IUserRequest, res: Response) {
+    const { userID } = req.userID as JwtPayload;
+
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: userID,
+        },
+      });
+
+      if (!user) {
+        return res.status(400).json({
+          message: "User Not Found",
+        });
+      }
+
+      const { id, name, email } = user;
+      res.status(200).json({ id, name, email });
+      
+    } catch (error) {
+      res.status(401).json({
+        message: "Something Went Wrong",
+      });
+    }
   }
 }

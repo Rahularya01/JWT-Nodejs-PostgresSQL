@@ -1,17 +1,21 @@
-import { Response, Request, NextFunction } from "express";
-import jwt, { JwtPayload, Secret } from "jsonwebtoken";
+import { Response, NextFunction } from "express";
+import jwt, { Secret } from "jsonwebtoken";
+import IUserRequest from "../lib/userType";
 
-const verifyToken = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers.authorization;
+const verifyToken = (req: IUserRequest, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
 
-  if (!token) return res.status(401).json({ message: "Access Denied" });
-
-  try {
-    const verified = jwt.verify(token, process.env.JWT_TOKEN as Secret);
-    // @ts-ignore: Unreachable code error
-    req.userID = verified;
-  } catch (error) {
-    res.status(400).json({ message: "Invalid Token" });
+    jwt.verify(token, process.env.JWT_TOKEN as Secret, (err, userID) => {
+      if (err) return res.status(403).json({ message: "Invalid Token!" });
+      req.userID = userID;
+      next();
+    });
+  } else {
+    res.status(401).json({
+      message: "You are not Authenticated",
+    });
   }
 };
 
