@@ -14,4 +14,6 @@ app.use(express.json());
 app.use(userRouter);
 app.use(taskRoutes);
 
-export default app;
+app.listen(3001, () => {
+  console.log("Server running on 3001");
+});
