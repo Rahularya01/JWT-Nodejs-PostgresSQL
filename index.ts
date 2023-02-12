@@ -11,9 +11,11 @@ const app: Application = express();
 app.use(cors());
 app.use(express.json());
 
-app.use(userRouter);
-app.use(taskRoutes);
+app.use("/api", userRouter);
+app.use("/api", taskRoutes);
 
 app.listen(3001, () => {
   console.log("Server running on 3001");
 });
+
+export default app;

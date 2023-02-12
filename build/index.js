@@ -12,8 +12,8 @@ dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-app.use(userRoutes_1.default);
-app.use(taskRoutes_1.default);
+app.use("/api", userRoutes_1.default);
+app.use("/api", taskRoutes_1.default);
 app.listen(3001, () => {
     console.log("Server running on 3001");
 });
